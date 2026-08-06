@@ -1,0 +1,190 @@
+/* ==========================================================================
+   VanillaBP Design System — tokens
+   Generated from the official logo. See DESIGN.md for rules and rationale.
+
+   Brand constants are extracted values and must not be edited.
+   Semantic tokens map brand constants onto roles; edit these to retheme.
+   ========================================================================== */
+
+:root {
+  /* --- Brand constants — canonical, do not alter -------------------------- */
+  --brand-brown:   #663300;  /* hsl(30 100% 20%) — BPMN glyph, wordmark      */
+  --brand-vanilla: #FFE699;  /* hsl(45 100% 80%) — popsicle body            */
+  --brand-gold:    #BF9000;  /* hsl(45 100% 37%) — popsicle stick           */
+  --brand-amber:   #FFC000;  /* hsl(45 100% 50%) — parent of vanilla + gold */
+
+  /* --- Typography -------------------------------------------------------- */
+  /* All faces must be SIL OFL 1.1 or equivalent. Vendor the licence file.
+     Calibri is prohibited — Microsoft-licensed. Carlito is its OFL-licensed,
+     metric-compatible substitute and is the fallback here. See DESIGN.md 2.1. */
+  /* Single-family system. Carlito has ONLY 400 and 700 — never write 600. */
+  --font-display: "Carlito", Calibri, system-ui, sans-serif;
+  --font-body:    "Carlito", Calibri, system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, monospace;
+
+  --weight-regular: 400;
+  --weight-bold:    700;
+
+  --text-display: clamp(2.75rem, 5.5vw, 4.5rem);
+  --text-h1:      clamp(2rem, 3.5vw, 2.75rem);
+  --text-h2:      clamp(1.5rem, 2.2vw, 1.875rem);
+  --text-h3:      1.25rem;
+  --text-body:    1.0625rem;
+  --text-small:   0.9375rem;
+  --text-eyebrow: 0.75rem;
+  --text-code:    0.875rem;
+
+  --leading-tight: 1.05;
+  --leading-snug:  1.25;
+  --leading-body:  1.65;
+
+  --tracking-display: -0.025em;
+  --tracking-eyebrow: 0.08em;
+  --tracking-button:  0.01em;
+
+  --measure: 68ch;
+
+  /* --- Space — 4px base -------------------------------------------------- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.5rem;
+  --space-6:  2rem;
+  --space-8:  3rem;
+  --space-10: 4rem;
+  --space-12: 6rem;
+  --space-16: 9rem;
+
+  /* --- Shape ------------------------------------------------------------- */
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   20px;
+  --radius-pill: 999px;
+
+  /* --- Motion ------------------------------------------------------------ */
+  --ease:          cubic-bezier(0.2, 0, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration:      200ms;
+
+  /* --- Semantic — light -------------------------------------------------- */
+  --bg:             #FFFFFF;
+  --bg-subtle:      #FFFBF0;
+  --bg-sunken:      #FDF4E0;
+  --surface-accent: var(--brand-vanilla);
+
+  /* Primary action: brand amber with the logo brown as the label — 6.28:1.
+     Amber is only 1.64:1 against a white page, so the edge needs a border to
+     satisfy WCAG 1.4.11; #806000 gives 5.85:1 against white. See DESIGN.md 7. */
+  --fill-primary:       var(--brand-amber);
+  --fill-primary-hover: #E6AD00;   /* label still 5.07:1 */
+  --fill-primary-edge:  #806000;
+  --on-primary:         var(--brand-brown);
+
+  --border:        #F0DFB8;
+  --border-strong: var(--brand-gold);
+
+  --text-color:  var(--brand-brown);  /* 10.30:1 on --bg */
+  --text-muted:  #975E26;             /*  5.32:1 on --bg */
+  --text-subtle: #A36629;             /*  4.68:1 on --bg — floor */
+  --accent-text: #806000;             /*  5.85:1 on --bg */
+  --on-accent:   var(--brand-brown);  /*  8.35:1 on --surface-accent */
+
+  /* Gold is graphic only — never carries text. See DESIGN.md 1.2. */
+  --accent-graphic:        var(--brand-gold);
+  --accent-graphic-bright: var(--brand-amber);
+
+  --shadow-1: 0 1px 2px rgb(102 51 0 / 0.06), 0 2px 8px rgb(102 51 0 / 0.05);
+  --shadow-2: 0 2px 4px rgb(102 51 0 / 0.07), 0 8px 24px rgb(102 51 0 / 0.07);
+
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:             #181106;  /* warm near-black, hue 35 — never #000 */
+    --bg-subtle:      #211608;
+    --bg-sunken:      #100B04;
+    --surface-accent: var(--brand-brown);
+
+    --border:        #3A2A10;
+    --border-strong: var(--brand-amber);
+
+    /* Near-neutral warm white. The earlier #F5E7CC was hsl(40 67% 88%) — enough
+       yellow to read as 1970s beige once it covered whole paragraphs. */
+    --text-color:  #FFF8EB;              /* 17.72:1 on --bg, hsl(39 100% 96%) */
+    --text-muted:  #C9BFB0;              /* 10.31:1 on --bg, hsl(36 19% 74%) */
+    --text-subtle: #C9BFB0;
+    --accent-text: var(--brand-amber);   /* 11.40:1 on --bg */
+    --on-accent:   var(--brand-vanilla); /*  8.35:1 on --surface-accent */
+
+    --accent-graphic:        var(--brand-amber);
+    --accent-graphic-bright: var(--brand-vanilla);
+
+    /* Amber separates at 11.40:1 on the dark page, so the edge border is not
+       needed and would only mute the fill. Hover is the same value as light. */
+    --fill-primary-edge: transparent;
+
+    /* Shadows are invisible on near-black — use hairlines instead */
+    --shadow-1: none;
+    --shadow-2: none;
+
+  }
+}
+
+/* ==========================================================================
+   Base — the minimum needed for the tokens to be self-demonstrating
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-color);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--text-color);       /* headings are brown, never tan, never gold */
+  letter-spacing: var(--tracking-display);
+  margin: 0;
+}
+
+h1 { font-size: var(--text-h1); line-height: var(--leading-tight); font-weight: var(--weight-bold); }
+h2 { font-size: var(--text-h2); line-height: var(--leading-snug);  font-weight: var(--weight-bold); }
+h3 { font-size: var(--text-h3); line-height: var(--leading-snug);  font-weight: var(--weight-bold); }
+
+em, i { font-style: italic; }  /* emphasis is italic — there is no mid weight */
+
+p { max-width: var(--measure); }
+
+a { color: var(--accent-text); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+code, pre { font-family: var(--font-mono); font-size: var(--text-code); }
+
+hr, .rule { border: 0; border-top: 2px solid var(--accent-graphic); }
+
+.eyebrow {
+  font-size: var(--text-eyebrow);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

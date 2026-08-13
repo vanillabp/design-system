@@ -486,3 +486,172 @@ Non-negotiable, not re-litigated per component:
 - `prefers-reduced-motion` respected.
 - `prefers-color-scheme` drives the dark palette. A manual override may be added
   later but must not be required.
+
+
+---
+
+## 12. Additions from the Claude Design work (2026-08-07)
+
+Recorded here so they are not mistaken for undocumented drift. Everything below
+resolves to existing tokens; no new colour, size or radius was introduced.
+
+### 12.1 The spine — §6 taken to its conclusion
+
+The section markers are now joined by a 2px `--border` hairline running from
+each marker to the next, so the page reads as one BPMN sequence rather than a
+stack of bands. `SectionSpine` implements it.
+
+This is a real change in emphasis. §6 placed markers on the eyebrow line of
+otherwise independent sections; the spine makes the sequence structural. The
+consequence, stated plainly: **on a spined page, card borders and alternating
+band tones are both redundant and must not be used.** Three edge systems
+competing on one page is exactly the incoherence §1.3 retired the cool grey for.
+Pages that are not sequences keep the plain `Section` with alternating tones.
+
+Spined sections sit **`--space-12` apart, not `--space-16`**. §3's rhythm assumes
+nothing else marks the boundary; here the rule does, so the full gap
+double-counts the separation and the page scans longer than it reads.
+
+### 12.2 Audience: the page now leads with the proposition
+
+The hero was written engineer-to-engineer, with a code panel as the primary
+visual. For architects planning a Camunda 7→8 migration and the people
+approving it, the code is proof, not the pitch. The headline states the benefit
+("Your business code should outlive your workflow engine"), the code moves to
+the second section, and three verifiable figures sit under the hero.
+
+The display line runs at `clamp(3rem, 7vw, 5.75rem)` — above `--text-display`.
+This is the pressure §2.2.1 predicted: 700 is the weight ceiling, so a headline
+can only be made larger or tighter, never heavier. Tracking goes to `-0.03em`.
+If more headline presence is ever needed than this, the answer is a second
+display family, which reverses the single-family decision — decide it
+deliberately.
+
+### 12.2b Open: header transparency
+
+§7 specifies `--bg` at 88% with a 12px backdrop blur. In practice 88% is opaque
+enough that the blur is barely perceptible, and the header reads as a solid bar.
+The implementation currently runs at 75%, which is legible but lets body text
+show through more than is comfortable. **Neither value is settled** — the right
+one can only be judged against real content scrolling behind it, which the site
+does not have yet. Revisit when the version 2 copy lands.
+
+### 12.2c The header collapse is scroll-driven, not threshold-driven
+
+§7 specifies two scroll thresholds — shrink past 72px, grow back under 24px —
+and explains that a single trigger point flaps "because the shrink itself moves
+the scroll position". The diagnosis is right; the remedy is not sufficient.
+Hysteresis narrows the unstable band but does not remove it, and in the
+implementation the header still oscillated several times a second around the
+trigger. It also forces the lockup swap to be a hard cut, and the
+`align-items` change from `flex-end` to `center` is not animatable at all.
+
+**Resolution — adopted (revised 2026-08-13):** the header state is one CSS
+custom property, **`--collapse`** (0 = expanded, 1 = collapsed), and every
+header property is a `calc()` of it. The state is a continuous function *of* the
+scroll offset rather than a decision made *about* it, so there is no state to
+flip and no feedback loop to close.
+
+`--collapse` is set by a small **rAF-throttled JS scroll handler**
+(`--collapse = clamp(scrollY / 96, 0, 1)`), not by a CSS scroll-timeline. An
+earlier version used `animation-timeline: scroll()`; it ran on the compositor in
+Chrome and Safari but **Firefox did not apply it at all — the header just stayed
+expanded**. A plain scroll handler behaves identically in every browser, and
+because it drives a *continuous* value (not a threshold) it does not reintroduce
+the flap. This is the one place JS earns its place back: the goal was never
+"no JS", it was "no threshold".
+
+Consequences:
+
+- **The cross-fade has no blank frame.** Both lockups share the logo's
+  coordinate system, so at equal height their mark *and* wordmark sit
+  pixel-identically — but only once the compact wordmark is raised to match: in
+  the inline `hero.html` compact SVG the wordmark group is moved from
+  `y=624.57` to `y=513.28` (the full lockup's value). The compact lockup then
+  lies **underneath at full opacity**, and only the full lockup on top fades
+  (`opacity: clamp(0, 1 - --collapse*1.5, 1)`). So the mark and wordmark stay
+  solid the whole way (the compact carries them) and **only the two strap lines
+  fade** — no blank moment, and no half-opacity shimmer where two copies of the
+  wordmark would otherwise overlap. The full is fully faded by `--collapse ≈
+  0.67`, while the lockup is still ≥274px wide, so the strap lines never linger
+  below their 234px legibility floor (§5.3).
+- The link row is **bottom-aligned throughout**. The old switch to `center`
+  produced a visible jump at exactly the moment the header was already moving.
+- The collapsed lockup height is **58px, not 52px**. 52 × 2.2456 = 117px wide,
+  which is below the 130px compact minimum §5.3 sets. 58px yields exactly 130px.
+  The reference `hero.html` shipped 52 and was out of spec; it is now 58.
+- **Reduced-motion users keep the header expanded and static.** The scroll
+  handler is not attached when `prefers-reduced-motion: reduce`, so `--collapse`
+  stays 0. The two-threshold handler and its flapping are gone entirely.
+- The compact lockup is always in the DOM, overlaid and `aria-hidden` so
+  assistive tech is not read the wordmark twice.
+
+**Open:** the wordmark reposition above is applied only to the *inline* compact
+SVG in `hero.html`, for the cross-fade. The standalone
+`logo/vanillabp-logo-compact.svg` asset is unchanged. Raising its wordmark to
+`y=513.28` also happens to centre it on the mark-plus-stick (centre ≈ 518),
+which is arguably better as a standalone lockup too — but that is a canonical
+asset change, so decide it deliberately rather than letting the two drift.
+
+### 12.3 Proof points must be verifiable
+
+`StatStrip` shows a figure and one line of context. The rule attached to it:
+every figure must be checkable against a repository. "2 engines" and "6
+blueprints" are countable; anything that is not gets dropped rather than
+estimated. A stat nobody can verify is decoration wearing a number's clothes.
+
+### 12.4 The logo is scheme-aware by default
+
+`currentColor` only resolves when an SVG is **inlined**. Loaded through
+`<img>` — which is what a component does — it falls back to black, and the
+lockup silently ships a black wordmark. `Logo` therefore defaults to
+`tone="auto"` and serves the light or dark file through a `<picture>` media
+source. §5.1's preference for the `currentcolor` file still holds wherever you
+can genuinely inline it.
+
+### 12.5 The hero proves the claim instead of asserting it (2026-08-13)
+
+The reference hero's engine toggle used to change a text label and nothing
+else, so the page *asserted* "swap the engine, not your business code" without
+demonstrating it. It now demonstrates it. This is the deliberate answer to the
+brief "the system is a little boring": the fix was not more decoration — banned
+by the brand — but finally **spending the boldness §6 budgeted for** on the
+product's own claim, told with the product's own device.
+
+Switching Camunda 7 ⇄ Camunda 8 in the hero now:
+
+- leaves the business-code panel (`@WorkflowService … LoanApproval`)
+  byte-for-byte identical — that stillness *is* the proof. The panel is drawn
+  as the BPMN sequence it already is: start event → task → end event (§6), so
+  the signature carries the hero rather than shrinking to one eyebrow glyph;
+- slides a single marker to the chosen engine and re-points the flow, so the
+  "swap" is a visible movement, not a state the reader has to decode;
+- changes **exactly one dependency line** — the `pom.xml` `<artifactId>` — which
+  flashes once (`--surface-accent` fading to transparent) to say *this, and only
+  this, is what moved*.
+
+Rules this establishes, so it is not mistaken for drift:
+
+- **No token was added.** Every colour, size, radius, easing and duration
+  resolves to `tokens.css`. A "kick" that needs a new colour is off-brand by
+  construction; this one needed none.
+- **One authored motion moment.** The marker slide, the dependency flash and a
+  short "unchanged" pulse are the *only* new motion, and all of it lives inside
+  `prefers-reduced-motion: no-preference`. Reduced-motion users get the same
+  state change with no movement. Do not scatter more.
+- **The proof pattern is reusable but not generic.** A live before/after belongs
+  only where the product's value *is* the invariance (business code unchanged
+  across engines). It is not a template to drop onto unrelated sections; that
+  would be the `01 / 02 / 03` mistake of §6 in interactive form.
+- The engine buttons are now the control *and* the diagram's terminus, so the
+  duplicate toggle in the panel head was removed — one control, not two.
+
+Browser-surface defaults were themed to the palette in the same pass
+(`::selection` → `--surface-accent` / `--on-accent`; `caret-color` →
+`--accent-graphic`; the code panel's scrollbar to `--border-strong`). These are
+page-level polish that every surface should inherit, not new system primitives.
+
+**Still open (not a defect introduced here):** the desktop nav's horizontal link
+row overflows by a few pixels at 360 px, exactly the failure §7 predicted for
+"five subpages coming". The mobile disclosure it calls for is the correct fix and
+is deferred to that work, not patched locally here.

@@ -1,0 +1,54 @@
+/* Base — the minimum needed for the tokens to be self-demonstrating. */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-color);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--text-color);
+  letter-spacing: var(--tracking-display);
+  margin: 0;
+}
+h1 { font-size: var(--text-h1); line-height: var(--leading-tight); font-weight: var(--weight-bold); }
+h2 { font-size: var(--text-h2); line-height: var(--leading-snug);  font-weight: var(--weight-bold); }
+h3 { font-size: var(--text-h3); line-height: var(--leading-snug);  font-weight: var(--weight-bold); }
+
+em, i { font-style: italic; }  /* emphasis is italic — there is no mid weight */
+
+p { max-width: var(--measure); }
+
+a { color: var(--accent-text); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--text-color); }
+
+code, pre { font-family: var(--font-mono); font-size: var(--text-code); }
+
+hr, .rule { border: 0; border-top: 2px solid var(--accent-graphic); }
+
+.eyebrow {
+  font-size: var(--text-eyebrow);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

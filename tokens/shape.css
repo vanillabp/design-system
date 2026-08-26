@@ -1,0 +1,8 @@
+/* Shape. Radii derive from the logo: a circle and two rounded rectangles at
+   roughly a 0.28 corner ratio. DESIGN.md 4. */
+:root {
+  --radius-sm:   6px;    /* focus ring, small chips  */
+  --radius-md:   12px;   /* code blocks              */
+  --radius-lg:   20px;   /* cards, illustration plates */
+  --radius-pill: 999px;  /* buttons                  */
+}

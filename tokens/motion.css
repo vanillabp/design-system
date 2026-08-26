@@ -1,0 +1,7 @@
+/* Motion. Hover and focus transitions, plus one scroll-reveal. Nothing else.
+   DESIGN.md 8. */
+:root {
+  --ease:          cubic-bezier(0.2, 0, 0.2, 1); /* @kind other */
+  --duration-fast: 120ms; /* @kind other */
+  --duration:      200ms; /* @kind other */
+}

@@ -1,7 +1,8 @@
 # VanillaBP Design System
 
 Single source of truth for the VanillaBP web presence. Every colour, size and
-spacing value used in the product must come from `tokens.css`. If a value is not
+spacing value used in the product must come from the token files under
+`tokens/`, reached through the single `styles.css` entry point. If a value is not
 in this document, it does not exist.
 
 **Brand promise:** *"[va·nil·la] … simple, plain, no frills."* The design must
@@ -268,7 +269,7 @@ surface. Only the wordmark's colour changes between modes (§1.4).
 | `logo/vanillabp-logo-dark.svg` | Full lockup, dark surfaces |
 | `logo/vanillabp-logo-adaptive.svg` | Full lockup, switches on `prefers-color-scheme` |
 | `logo/vanillabp-logo-currentcolor.svg` | Full lockup, wordmark inherits `currentColor` — **preferred for inline use on a website** |
-| `logo/vanillabp-logo-compact.svg` | Mark plus wordmark, no strap lines. Scrolled headers and any slot under 234 px |
+| `logo/vanillabp-logo-compact.svg` | Mark plus wordmark, no strap lines. Scrolled headers and any slot under 234 px. Its wordmark sits at the full lockup's `y=513.28`, so the two lockups are interchangeable at equal height — see §12.2c. |
 
 All four are outline-only: no `<text>`, no font reference, no external asset. They
 render identically everywhere regardless of which webfonts load.
@@ -487,7 +488,6 @@ Non-negotiable, not re-litigated per component:
 - `prefers-color-scheme` drives the dark palette. A manual override may be added
   later but must not be required.
 
-
 ---
 
 ## 12. Additions from the Claude Design work (2026-08-07)
@@ -575,6 +575,16 @@ Consequences:
   wordmark would otherwise overlap. The full is fully faded by `--collapse ≈
   0.67`, while the lockup is still ≥274px wide, so the strap lines never linger
   below their 234px legibility floor (§5.3).
+- **The header is `position: fixed` behind a constant-height spacer, not
+  `sticky`.** A sticky header is in the document flow, so collapsing it by up to
+  104px pulls the whole page up *while the reader is scrolling*: their scroll
+  and the rising content add together, which reads as hopping, and the browser
+  must relay out the entire document every frame. With cold caches right after
+  a reload that cost is plainly visible; once warm it looks smooth — which is
+  why the stutter appears to "go away" after scrolling back and forth a few
+  times, and why it is easy to misdiagnose as a flap. A fixed header reserves
+  its expanded height once and never touches the flow again, so collapsing
+  repaints the bar and nothing else. **Do not convert it back to `sticky`.**
 - The link row is **bottom-aligned throughout**. The old switch to `center`
   produced a visible jump at exactly the moment the header was already moving.
 - The collapsed lockup height is **58px, not 52px**. 52 × 2.2456 = 117px wide,
@@ -585,13 +595,40 @@ Consequences:
   stays 0. The two-threshold handler and its flapping are gone entirely.
 - The compact lockup is always in the DOM, overlaid and `aria-hidden` so
   assistive tech is not read the wordmark twice.
+- **The slot's width and height are both explicit `calc()`s of `--collapse`;
+  neither is derived from the SVGs' intrinsic size.** When the width depended on
+  the images having decoded, the flex row relaid out on every frame of the first
+  scroll and the nav wrapped to a second line and back.
+- **The hairline is a pseudo-element faded with `opacity`, not a
+  `border-bottom-color` faded through `color-mix()`.** A `calc()` percentage
+  inside `color-mix()` is not accepted by every engine and fell back silently to
+  fully transparent, so the collapsed header had no bottom edge at all. Opacity
+  always interpolates.
+- **All nav links are 700.** With the weight ceiling at 700 (§2.2.1) the active
+  link cannot go heavier, so it is marked by the 2px `--accent-graphic`
+  underline alone.
 
-**Open:** the wordmark reposition above is applied only to the *inline* compact
-SVG in `hero.html`, for the cross-fade. The standalone
-`logo/vanillabp-logo-compact.svg` asset is unchanged. Raising its wordmark to
-`y=513.28` also happens to centre it on the mark-plus-stick (centre ≈ 518),
-which is arguably better as a standalone lockup too — but that is a canonical
-asset change, so decide it deliberately rather than letting the two drift.
+**Resolved 2026-08-26 — approved by the brand owner.** The compact lockup's
+wordmark moves to `y=513.28`, the full lockup's value, in the **canonical asset**
+`logo/vanillabp-logo-compact.svg` and in every file derived from it, not just in
+the inline copy in `hero.html`. Two reasons, and the second is why it is a
+reasonable change to the asset rather than a hack for one component:
+
+- The cross-fade needs it. Both lockups share the logo's coordinate system, so
+  at equal height the mark and the wordmark only sit pixel-identically once the
+  compact wordmark is raised; otherwise the two are visibly offset mid-fade.
+- `y=513.28` also centres the wordmark on the mark-plus-stick (centre ≈ 518),
+  which is better for the standalone lockup on its own terms.
+
+The two lockups now agree by construction, so nothing has to be kept in sync by
+hand. `§5.3`'s minimum sizes are unaffected — the geometry moved, not the
+proportions.
+
+**This project's `Header` component** (`components/layout/Header.jsx`) does not
+inline the two lockups; it cross-fades two separate `<img>`/`<picture>` assets,
+overlapping at the same height and bottom edge. Because the reposition now lives
+in the assets themselves, the component gets the aligned fade for free — which
+is the point of fixing it at the source rather than in the markup.
 
 ### 12.3 Proof points must be verifiable
 
@@ -633,8 +670,8 @@ Switching Camunda 7 ⇄ Camunda 8 in the hero now:
 Rules this establishes, so it is not mistaken for drift:
 
 - **No token was added.** Every colour, size, radius, easing and duration
-  resolves to `tokens.css`. A "kick" that needs a new colour is off-brand by
-  construction; this one needed none.
+  resolves to a token under `tokens/`. A "kick" that needs a new colour is
+  off-brand by construction; this one needed none.
 - **One authored motion moment.** The marker slide, the dependency flash and a
   short "unchanged" pulse are the *only* new motion, and all of it lives inside
   `prefers-reduced-motion: no-preference`. Reduced-motion users get the same
@@ -655,3 +692,56 @@ page-level polish that every surface should inherit, not new system primitives.
 row overflows by a few pixels at 360 px, exactly the failure §7 predicted for
 "five subpages coming". The mobile disclosure it calls for is the correct fix and
 is deferred to that work, not patched locally here.
+
+### 12.6 Release red — the one hue outside the palette (2026-08-26)
+
+§1.1 states that hue 45 and hue 30 are the only hues in the system. **Release red
+is a deliberate, single exception, and it is bounded by its meaning rather than
+by taste.** VanillaBP 2.0 needed a mark that says *new in this version* and that
+cannot be mistaken for amber — and inside a two-hue warm palette there is no
+warm tone left that reads as "new" rather than as "brand".
+
+```css
+--fill-release:       #A3231A;  /* 6.09:1 with white text */
+--fill-release-hover: #8A1D15;
+--on-release:         #FFFFFF;
+```
+
+Dark mode lifts the fill to `#C42C21` / `#D8362A`: `#A3231A` on `#181106` is
+only 2.4:1 and would read as a dark patch rather than a mark. White text still
+clears 4.5:1 on the lifted value.
+
+The constraints that keep it from spreading:
+
+- **It is not a semantic danger colour.** This system has no error state, and
+  introducing red as "error" would retroactively make every release badge look
+  like a warning. Form errors are carried by `--accent-text` plus the message
+  (§7, Input).
+- **It is not a highlight.** Emphasis is amber, or size, or italic — never red.
+- **Restraint is the whole point.** Two or three uses per surface. A page where
+  five things are red says nothing is new. On the landing page it appears in
+  exactly three places: the badge beside the hero headline, the "Quarkus is
+  available as of 2.0" note, and the "New in 2" badges on the features page.
+- It is dark enough to carry white text at 6.09:1, so it needs no second
+  variant for text-on-fill — one fill, one hover, one label colour.
+
+### 12.7 Slides need the layout vocabulary restated (2026-08-26)
+
+A deck built with this system came out visibly weaker than the website. The
+cause is structural, not decorative: the page's rhythm comes from `Section`,
+`SectionSpine` and `Eyebrow`, and **a slide is one band, not a scroll of
+bands** — so a deck falls back on plain boxes and loses the vocabulary
+entirely. `guidelines/DECK-VOCABULARY.md` restates it at 1920×1080: band
+alternation across slides rather than down a scroll, the spine turned
+horizontal for a sequence, eyebrow sizes, card variants, stat and code scales,
+and the minimum sizes. It introduces no colour, font or radius.
+
+### 12.8 Browser globals are `window.`-qualified (2026-08-26)
+
+Every browser global in a component is written `window.scrollY`,
+`window.addEventListener`, `window.matchMedia`, `window.requestAnimationFrame`.
+Create React App's `react-app` ESLint config rejects bare globals via
+`no-restricted-globals` and turns that into a **build failure on CI**. Because
+consumers vendor these components as copies rather than as a dependency, the
+unqualified form breaks every consumer's build individually — so the
+qualification belongs here, once, not in each project.

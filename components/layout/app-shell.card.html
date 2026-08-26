@@ -1,0 +1,48 @@
+<!-- @dsCard group="Components" viewport="700x420" name="Layout in an app shell" subtitle="Header + Container inside a column flex root — the layout every real app uses" -->
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>html,body{margin:0;height:100%}body{background:var(--bg)}
+/* The point of this specimen: the page root is a COLUMN FLEX container, the
+   ordinary sticky-footer shell. Two layout bugs only appear here and are
+   invisible in a normal block-flow specimen — the Header spacer is a flex item
+   (and shrinks to 0 without flex:none), and Container is a flex child (whose
+   `margin: 0 auto` becomes a cross-axis auto margin and kills stretch). */
+#root{height:100%;overflow:auto}
+main{display:flex;flex-direction:column;min-height:100%}
+.lbl{font-size:11px;font-family:var(--font-mono);color:var(--text-subtle)}</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script></head><body>
+<div id="root"></div>
+<script type="text/babel">
+const { Header, Container, Footer } = window.VanillaBPDesignSystem_b629c7;
+
+function Demo() {
+  return (
+    <main>
+      <Header logoBase="../../assets/logo" current="/blueprints" links={[
+        { label: 'Adapters', href: '/features' }, { label: 'Blueprints', href: '/blueprints' },
+        { label: 'BPMN', href: '/bpmn' }, { label: 'About', href: '/about' }]} />
+      <Container style={{ flex: 1, paddingTop: 'var(--space-6)', paddingBottom: 'var(--space-10)' }}>
+        <div className="lbl" style={{ marginBottom: 'var(--space-3)' }}>scroll the frame — the headline must never slide under the bar</div>
+        <h2 style={{ marginBottom: 'var(--space-4)' }}>The first block sits at full width and clears the bar</h2>
+        <p style={{ color: 'var(--text-muted)', margin: '0 0 var(--space-5)' }}>
+          Both regressions this specimen guards against looked like per-page mistakes,
+          because inside a <code>Section</code> the Container is in normal block flow
+          and the spacer is not a flex item. Neither is findable by reading the CSS.
+        </p>
+        {[1, 2, 3, 4].map((n) => (
+          <p key={n} style={{ color: 'var(--text-muted)' }}>
+            Filler paragraph {n} — the page has to be taller than the viewport for the
+            spacer to collapse, which is what made the bug intermittent.
+          </p>
+        ))}
+      </Container>
+      <Footer logoBase="../../assets/logo" columns={[
+        { title: 'Project', links: [{ label: 'GitHub', href: '#' }] }]} />
+    </main>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo />);
+</script>
+</body></html>

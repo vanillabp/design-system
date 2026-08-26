@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="VanillaBP">
+  <defs><clipPath id="body-f"><path d="M 69.06 66.62 A 58.94 58.94 0 0 1 186.94 66.62 L 186.94 163.26 A 19.65 19.65 0 0 1 167.29 182.91 L 88.71 182.91 A 19.65 19.65 0 0 1 69.06 163.26 Z"></path></clipPath></defs>
+  <rect x="108.82" y="158.87" width="38.36" height="89.45" rx="19.18" fill="#BF9000"></rect>
+  <path d="M 69.06 66.62 A 58.94 58.94 0 0 1 186.94 66.62 L 186.94 163.26 A 19.65 19.65 0 0 1 167.29 182.91 L 88.71 182.91 A 19.65 19.65 0 0 1 69.06 163.26 Z" fill="#FFE699"></path>
+  <g clip-path="url(#body-f)" fill="none" stroke="#663300" stroke-width="13.27">
+    <circle cx="69.05" cy="82.83" r="29.82"></circle>
+    <path d="M 98.87 82.83 L 117.33 82.83"></path>
+    <path d="M 157.15 82.83 L 117.33 62.92 L 117.33 102.73 Z" fill="#663300" stroke="none"></path>
+    <rect x="157.12" y="31.61" width="75.01" height="102.19" rx="12.50"></rect>
+  </g>
+</svg>

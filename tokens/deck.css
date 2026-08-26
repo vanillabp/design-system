@@ -1,0 +1,42 @@
+/* Slide scale. Inert unless something opts in with data-scale="deck" — usually
+   the slide root:
+
+     <div class="slide" data-scale="deck"> … </div>
+
+   Why this exists: the page scale bottoms out at 12px (--text-eyebrow) and
+   15px (--text-small), and on a 1920x1080 surface everything below 24px is
+   unreadable from the back of a room. Every deck was otherwise re-inventing
+   the same :root { font-size } hack plus a handful of token overrides, which
+   is a convention no two decks would spell the same way.
+
+   Values come from DECK-VOCABULARY.md, which is the prose version of this
+   file. No new colour, font or radius — only sizes and spacing. */
+[data-scale="deck"] {
+  /* Type. Same 1.25 ladder, lifted so the floor is 28px. DECK-VOCABULARY 2. */
+  --text-display: 6.5rem;    /* 104px */
+  --text-h1:      4.5rem;    /*  72px */
+  --text-h2:      3.5rem;    /*  56px */
+  --text-h3:      2.5rem;    /*  40px */
+  --text-body:    2rem;      /*  32px */
+  --text-small:   1.75rem;   /*  28px */
+  --text-eyebrow: 1.875rem;  /*  30px — DECK-VOCABULARY 2 asks for 28-32 */
+  --text-code:    1.75rem;   /*  28px — DECK-VOCABULARY 7 asks for 26-32 */
+  --text-stat:    7.5rem;    /* 120px — DECK-VOCABULARY 6 asks for 96-140 */
+
+  /* Space, x1.5, every step still a multiple of 4. --space-6 lands on 48px,
+     the top of the 40-48 card padding DECK-VOCABULARY 4 asks for. */
+  --space-1:  0.375rem;  /*   6px */
+  --space-2:  0.75rem;   /*  12px */
+  --space-3:  1rem;      /*  16px */
+  --space-4:  1.5rem;    /*  24px */
+  --space-5:  2.25rem;   /*  36px */
+  --space-6:  3rem;      /*  48px */
+  --space-8:  4.5rem;    /*  72px */
+  --space-10: 6rem;      /*  96px */
+  --space-12: 9rem;      /* 144px */
+  --space-16: 13.5rem;   /* 216px */
+
+  /* Prose is shorter on a slide than on a page — a 68ch line at 32px is wider
+     than the slide. DECK-VOCABULARY 7's "roughly 60 columns" generalised. */
+  --measure: 46ch;
+}

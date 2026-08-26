@@ -1,0 +1,12 @@
+/* Carlito — SIL OFL 1.1, vendored from vanillabp/landing-page public/fonts.
+   Metric-compatible with Calibri, which the logo wordmark was originally set in
+   and which is PROHIBITED here (Microsoft-licensed). DESIGN.md 2.1.
+   Only 400 and 700 exist. Never write 600. */
+@font-face { font-family:"Carlito"; src:url("../assets/fonts/Carlito-Regular.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Carlito"; src:url("../assets/fonts/Carlito-Bold.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+@font-face { font-family:"Carlito"; src:url("../assets/fonts/Carlito-Italic.ttf") format("truetype"); font-weight:400; font-style:italic; font-display:swap; }
+@font-face { font-family:"Carlito"; src:url("../assets/fonts/Carlito-BoldItalic.ttf") format("truetype"); font-weight:700; font-style:italic; font-display:swap; }
+
+/* JetBrains Mono — SIL OFL 1.1. No binary was present in either source repo, so
+   this is a CDN link, not a vendored file. See readme.md "Substitutions". */
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");

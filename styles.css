@@ -1,0 +1,10 @@
+/* VanillaBP Design System — global entry point.
+   Imports only. Values live in tokens/. See readme.md + guidelines/DESIGN.md. */
+@import "tokens/fonts.css";
+@import "tokens/colors.css";
+@import "tokens/typography.css";
+@import "tokens/spacing.css";
+@import "tokens/shape.css";
+@import "tokens/motion.css";
+@import "tokens/deck.css";
+@import "tokens/base.css";

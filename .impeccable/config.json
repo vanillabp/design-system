@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "hero.html"
+        ],
+        "createdAt": "2026-08-13T14:29:28.023Z",
+        "reason": "false positive: L225 is a CSS comment containing the word <img>; page has no image tags, logo/favicon are inlined SVG"
+      }
+    ]
+  }
+}

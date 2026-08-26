@@ -1,0 +1,129 @@
+/* Colour. Brand constants are extracted from the official logo — do not alter.
+   Semantic tokens map them onto roles. DESIGN.md 1. */
+:root {
+  /* Brand constants — canonical */
+  --brand-brown:   #663300;  /* hsl(30 100% 20%) — BPMN glyph, wordmark  */
+  --brand-vanilla: #FFE699;  /* hsl(45 100% 80%) — popsicle body         */
+  --brand-gold:    #BF9000;  /* hsl(45 100% 37%) — popsicle stick        */
+  --brand-amber:   #FFC000;  /* hsl(45 100% 50%) — parent of both        */
+
+  /* Surfaces */
+  --bg:             #FFFFFF;
+  --bg-subtle:      #FFFBF0;
+  --bg-sunken:      #FDF4E0;
+  --surface-accent: var(--brand-vanilla);
+
+  /* Lines */
+  --border:        #F0DFB8;
+  --border-strong: var(--brand-gold);
+
+  /* Text — headings are brown, never tan, never gold */
+  --text-color:  var(--brand-brown);  /* 10.30:1 on --bg        */
+  --text-muted:  #975E26;             /*  5.32:1 on --bg        */
+  --text-subtle: #A36629;             /*  4.68:1 on --bg, floor */
+  --accent-text: #806000;             /*  5.85:1 on --bg        */
+  --on-accent:   var(--brand-brown);  /*  8.35:1 on --surface-accent */
+
+  /* Gold is graphic only — it never carries text. DESIGN.md 1.2 */
+  --accent-graphic:        var(--brand-gold);
+  --accent-graphic-bright: var(--brand-amber);
+
+  /* Primary action. Amber is 1.64:1 on white, so the edge carries the
+     WCAG 1.4.11 boundary; #806000 is 3.56:1 against the fill. */
+  --fill-primary:       var(--brand-amber);
+  --fill-primary-hover: #E6AD00;
+  --fill-primary-edge:  #806000;
+  --on-primary:         var(--brand-brown);
+
+  /* Code syntax — brown/amber family plus one cool tone for strings */
+  --code-annotation: var(--accent-text);
+  --code-comment:    var(--text-muted);
+  --code-string:     #2F6F6A;
+
+  /* Release announcements. The one hue outside the two-hue palette, reserved
+     for "new in this version" and nothing else — a deep red at hue 5, dark
+     enough to carry white text (6.09:1) so it never needs a second variant.
+     Not a semantic danger colour: there is no error state in this system. */
+  --fill-release:       #A3231A;
+  --fill-release-hover: #8A1D15;
+  --on-release:         #FFFFFF;
+
+  /* Shadows are brown-tinted, never grey or black. Two levels only. */
+  --shadow-1: 0 1px 2px rgb(102 51 0 / 0.06), 0 2px 8px rgb(102 51 0 / 0.05);
+  --shadow-2: 0 2px 4px rgb(102 51 0 / 0.07), 0 8px 24px rgb(102 51 0 / 0.07);
+}
+
+/* Dark mode inverts the roles, not the palette. No new brand colours. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:             #181106;  /* warm near-black, hue 35 — never #000 */
+    --bg-subtle:      #211608;
+    --bg-sunken:      #100B04;
+    --surface-accent: var(--brand-brown);
+
+    --border:        #3A2A10;
+    --border-strong: var(--brand-amber);
+
+    --text-color:  #FFF8EB;              /* 17.72:1 — near-neutral in bulk */
+    --text-muted:  #C9BFB0;              /* 10.31:1 */
+    --text-subtle: #C9BFB0;
+    --accent-text: var(--brand-amber);   /* 11.40:1 */
+    --on-accent:   var(--brand-vanilla); /*  8.35:1 on --surface-accent */
+
+    --accent-graphic:        var(--brand-amber);
+    --accent-graphic-bright: var(--brand-vanilla);
+
+    --code-string: #7CC6BE;
+
+    /* Lifted, because #A3231A on #181106 is only 2.4:1 — the fill would read
+       as a dark patch rather than a mark. White text still clears 4.5:1. */
+    --fill-release:       #C42C21;
+    --fill-release-hover: #D8362A;
+
+    /* The fill separates at 11.40:1 here, so the edge would only mute it. */
+    --fill-primary-edge: transparent;
+
+    /* Shadow on near-black is invisible and muddies edges — use hairlines. */
+    --shadow-1: none;
+    --shadow-2: none;
+  }
+
+  /* Opt-out: pin the light palette regardless of the system setting.
+     Decks are why this exists. A projected slide must not recolour itself
+     according to the presenting laptop's preference, possibly mid-talk, and
+     without this every deck copied these values into its own override block.
+     Duplicated once here so it is never duplicated in a consumer.
+
+       <html data-theme="light">   (or on the slide root)
+
+     Do not reach for it on an ordinary page: there the system setting is the
+     reader's decision, not the designer's. */
+  [data-theme="light"] {
+    --bg:             #FFFFFF;
+    --bg-subtle:      #FFFBF0;
+    --bg-sunken:      #FDF4E0;
+    --surface-accent: var(--brand-vanilla);
+
+    --border:        #F0DFB8;
+    --border-strong: var(--brand-gold);
+
+    --text-color:  var(--brand-brown);
+    --text-muted:  #975E26;
+    --text-subtle: #A36629;
+    --accent-text: #806000;
+    --on-accent:   var(--brand-brown);
+
+    --accent-graphic:        var(--brand-gold);
+    --accent-graphic-bright: var(--brand-amber);
+
+    --code-string: #2F6F6A;
+
+    --fill-release:       #A3231A;
+    --fill-release-hover: #8A1D15;
+
+    --fill-primary-edge: #806000;
+
+    --shadow-1: 0 1px 2px rgb(102 51 0 / 0.06), 0 2px 8px rgb(102 51 0 / 0.05);
+    --shadow-2: 0 2px 4px rgb(102 51 0 / 0.07), 0 8px 24px rgb(102 51 0 / 0.07);
+  }
+}
